@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Royal Cocoa - Product Order Form</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2c1810 0%, #1a0f0a 100%);
+            color: #333;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 50px rgba(0,0,0,0.3);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #d4a574 0%, #8b6914 100%);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.95;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .form-section {
+            background: #f9f7f4;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border-left: 5px solid #d4a574;
+        }
+
+        .form-section h2 {
+            color: #2c1810;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .customer-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 600px) {
+            .customer-info {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            color: #2c1810;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 0.95em;
+        }
+
+        .form-group input {
+            padding: 12px;
+            border: 2px solid #d4a574;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #8b6914;
+            box-shadow: 0 0 5px rgba(139, 105, 20, 0.3);
+        }
+
+        .products-section {
+            background: #f9f7f4;
+            padding: 25px;
+            border-radius: 15px;
+            border-left: 5px solid #d4a574;
+            margin-bottom: 30px;
+        }
+
+        .products-section h2 {
+            color: #2c1810;
+            margin-bottom: 25px;
+            font-size: 1.5em;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .product-card {
+            background: white;
+            border: 2px solid #e8dcc8;
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+
+        .product-card:hover {
+            border-color: #d4a574;
+            box-shadow: 0 5px 20px rgba(212, 165, 116, 0.2);
+            transform: translateY(-3px);
+        }
+
+        .product-name {
+            font-size: 1.2em;
+            font-weight: 700;
+            color: #2c1810;
+            margin-bottom: 8px;
+        }
+
+        .product-desc {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+
+        .product-price {
+            font-size: 1.4em;
+            font-weight: 700;
+            color: #d4a574;
+            margin-bottom: 15px;
+        }
+
+        .product-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .product-controls label {
+            font-weight: 600;
+            color: #2c1810;
+            min-width: 70px;
+            font-size: 0.9em;
+        }
+
+        .product-controls select {
+            flex: 1;
+            padding: 8px 12px;
+            border: 2px solid #d4a574;
+            border-radius: 6px;
+            font-size: 0.95em;
+            background: white;
+            cursor: pointer;
+            transition: border-color 0.3s;
+        }
+
+        .product-controls select:focus {
+            outline: none;
+            border-color: #8b6914;
+        }
+
+        .summary-section {
+            background: #2c1810;
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+
+        .summary-section h2 {
+            color: #d4a574;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .summary-items {
+            max-height: 250px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 8px;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 0.95em;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .summary-item:last-child {
+            border-bottom: none;
+        }
+
+        .summary-item-name {
+            flex: 1;
+        }
+
+        .summary-item-cost {
+            font-weight: 600;
+            color: #d4a574;
+            min-width: 80px;
+            text-align: right;
+        }
+
+        .summary-total {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 20px;
+            border-top: 2px solid #d4a574;
+            margin-top: 20px;
+            font-size: 1.4em;
+            font-weight: 700;
+        }
+
+        .summary-total-label {
+            color: #d4a574;
+        }
+
+        .summary-total-amount {
+            color: #d4a574;
+            font-size: 1.5em;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 15px 40px;
+            font-size: 1.05em;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, #d4a574 0%, #8b6914 100%);
+            color: white;
+            flex: 1;
+            max-width: 300px;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(212, 165, 116, 0.4);
+        }
+
+        .btn-reset {
+            background: #e8dcc8;
+            color: #2c1810;
+            flex: 1;
+            max-width: 300px;
+        }
+
+        .btn-reset:hover {
+            background: #d4c4b0;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 2px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 2px solid #f5c6cb;
+        }
+
+        .alert-info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 2px solid #bee5eb;
+        }
+
+        .footer {
+            background: #2c1810;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            font-size: 0.9em;
+        }
+
+        .empty-cart {
+            text-align: center;
+            padding: 20px;
+            color: #999;
+            font-style: italic;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.05);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #d4a574;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #8b6914;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>👑 Royal Cocoa</h1>
+            <p>Premium Chocolate & Snacks - Order Now</p>
+        </div>
+
+        <div class="content">
+            <form id="orderForm">
+                <!-- Customer Information -->
+                <div class="form-section">
+                    <h2>📋 Your Information</h2>
+                    <div class="customer-info">
+                        <div class="form-group">
+                            <label for="name">Full Name *</label>
+                            <input type="text" id="name" name="name" required placeholder="Enter your name">
+                        </div>
+                        <div class="form-group">
+                            <label for="varsity">Varsity Name *</label>
+                            <input type="text" id="varsity" name="varsity" required placeholder="Enter your varsity name">
+                        </div>
+                        <div class="form-group">
+                            <label for="hall">Hall Name *</label>
+                            <input type="text" id="hall" name="hall" required placeholder="Enter your hall name">
+                        </div>
+                        <div class="form-group">
+                            <label for="id">Std. ID / Reference *</label>
+                            <input type="text" id="id" name="id" required placeholder="Enter Std. ID or reference number">
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Phone Number *</label>
+                            <input type="tel" id="phone" name="phone" required placeholder="Enter your phone number">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Products Section -->
+                <div class="products-section">
+                    <h2>🍫 Select Products</h2>
+                    <div class="products-grid" id="productsGrid"></div>
+                </div>
+
+                <!-- Summary Section -->
+                <div class="summary-section">
+                    <h2>📦 Order Summary</h2>
+                    <div class="summary-items" id="summaryItems">
+                        <div class="empty-cart">No products selected yet</div>
+                    </div>
+                    <div class="summary-total">
+                        <span class="summary-total-label">TOTAL COST:</span>
+                        <span class="summary-total-amount">৳<span id="totalCost">0</span></span>
+                    </div>
+                </div>
+    
+                <!-- Facebook Follow Section -->
+                <div class="summary-section" style="margin-bottom: 30px;">
+                    <h2>📘 Follow Our Page</h2>
+                    <p style="margin-bottom: 15px; color: #f0e6d8 !important;">
+                        Visit us on Facebook for Future Orders!: 
+                        <a href="https://www.facebook.com/people/Royal-Cocoa/61591977021747/" rel="noopener noreferrer" target="_blank"
+                           style="color: #d4a574; font-weight: 600; text-decoration: none;">
+                               Royal Cocoa Facebook Page →
+                        </a>
+                    </p>
+                    <div class="form-group">
+                        <label style="color: #f0e6d8 !important;">Have you followed our page Royal Cocoa? *</label>
+                        <div class="follow-options">
+                            <label class="follow-option" style="display:flex; align-items:center; gap:8px; background:#ffffff; border:2px solid #d4a574; border-radius:8px; padding:10px 20px; cursor:pointer;">
+                                <input type="radio" name="followedPage" value="Yes" required style="width:18px; height:18px; accent-color:#8b6914;">
+                                <span style="color:#2c1810; font-weight:600;">Yes</span>
+                            </label>
+                            <label class="follow-option" style="display:flex; align-items:center; gap:8px; background:#ffffff; border:2px solid #d4a574; border-radius:8px; padding:10px 20px; cursor:pointer; margin-top: 10px;">
+                                <input type="radio" name="followedPage" value="No" required style="width:18px; height:18px; accent-color:#8b6914;">
+                                <span style="color:#2c1810; font-weight:600;">No</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>      
+                <!-- Messages -->
+                <div id="messages"></div>
+
+                <!-- Buttons -->
+                <div class="button-group">
+                    <button type="reset" class="btn btn-reset">Clear All</button>
+                    <button type="submit" class="btn btn-submit">Place Order</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="footer">
+            <p>✨ Premium Quality • Fast Delivery • Best Prices ✨</p>
+            <p>© 2026 Royal Cocoa. All rights reserved.</p>
+        </div>
+    </div>
+
+    <script>
+        // Product Data
+        const products = [
+            { id: 1, name: "KitKat 2 Finger (12g)", desc: "Classic 2-finger wafer bar", price: 25 },
+            { id: 2, name: "KitKat 2 Finger (18g)", desc: "Premium 2-finger wafer bar", price: 45 },
+            { id: 3, name: "KitKat 3 Finger", desc: "Rich 3-finger chocolate bar", price: 60 },
+            { id: 4, name: "KitKat 4 Finger", desc: "Full 4-finger chocolate bar", price: 80 },
+            { id: 5, name: "Cadbury Dairy Milk (11g) ", desc: "Classic Dairy Milk", price: 30 },
+            { id: 6, name: "Cadbury Dairy Milk (20g) ", desc: "Premium Dairy Milk", price: 45 },
+            { id: 7, name: "Cadbury Dairy Milk Silk (55g) ", desc: "Royal Silk", price: 210 },
+            { id: 8, name: "5 Star", desc: "Creamy wafer & chocolate", price: 30 },
+            { id: 9, name: "Perk", desc: "Chocolate wafer delight", price: 20 },
+            { id: 10, name: "Safari", desc: "Delicious chocolate bar", price: 20 },
+            { id: 11, name: "Munch", desc: "Crispy wafer chocolate", price: 20 },
+            { id: 12, name: "Oreo (42g)", desc: "Classic cookie & cream", price: 35 },
+            { id: 13, name: "Snickers (12g)", desc: "Nuts & nougat bar", price: 25 },
+            { id: 14, name: "Snickers (22g)", desc: "Premium nuts & nougat", price: 45 },
+            { id: 15, name: "Snickers (50g)", desc: "Large nuts & nougat bar", price: 110 },
+            { id: 16, name: "Amul Dark Chocolate (35g)", desc: "Pure dark chocolate", price: 110 },
+            { id: 17, name: "Amul Dark Chocolate (125g)", desc: "Premium dark chocolate", price: 320 },
+            { id: 18, name: "Raffaelo (12g)", desc: "White chocolate coconut", price: 160 },
+            { id: 19, name: "Kitkat 2 Finger(12g) Box (42 pcs)", desc: "Bulk kitkat 12g 2F chocolates", price: 1000 },
+            { id: 20, name: "Kitkat 2 Finger(18g) Box (30 pcs)", desc: "Bulk kitkat 18g 2F chocolates", price: 1280 },
+            { id: 21, name: "Kitkat 3 Finger Box (28 pcs)", desc: "Bulk kitkat 3F chocolates", price: 1550},
+            { id: 22, name: "Kitkat 4 Finger Box (21 pcs)", desc: "Bulk kitkat 4F", price: 1600 },
+            { id: 23, name: "Cadbury Dairy Milk 11g Box (56 pcs) ", desc: "Classic Dairy Milk 11g Bulk", price: 1480 },
+            { id: 24, name: "Cadbury Dairy Milk 20g Box (40 pcs) ", desc: "Classic Dairy Milk 20g  Bulk", price: 1600 },
+            { id: 25, name: "Snickers 12g Box (40 pcs) ", desc: "Bulk snickers 12g chocolates", price: 900},
+            { id: 26, name: "Snickers 22g Box (32 pcs)", desc: "Bulk snickers 22g chocolates", price: 1340},
+            { id: 27, name: "Snickers 50g Box (24 pcs)", desc: "Bulk snickers 50g chocolates", price: 2300 },
+            { id: 28, name: "Perk Box (30 pcs)", desc: "Bulk perk chocolates", price: 500 },
+            { id: 29, name: "Safari Box (30 pcs)", desc: "Bulk safari chocolates", price: 500 },
+            { id: 30, name: "5 Star Box (52 pcs)", desc: "Bulk 5 star bars", price: 1100 },
+            { id: 31, name: "Munch Box (32 pcs)", desc: "Bulk munch bars", price: 530 },
+            { id: 32, name: "Oreo Box (12 pcs)", desc: "Bulk oreo cookies", price: 360 }
+        ];
+
+        const quantities = new Map();
+
+        // Initialize
+        function init() {
+            renderProducts();
+            setupFormListener();
+            setupResetListener();
+        }
+
+        // Render Products
+        function renderProducts() {
+            const grid = document.getElementById('productsGrid');
+            grid.innerHTML = products.map(product => `
+                <div class="product-card">
+                    <div class="product-name">${product.name}</div>
+                    <div class="product-desc">${product.desc}</div>
+                    <div class="product-price">৳${product.price}</div>
+                    <div class="product-controls">
+                        <label for="qty-${product.id}">Qty:</label>
+                        <select id="qty-${product.id}" onchange="updateQuantity(${product.id}, this.value)">
+                            <option value="0">0</option>
+                            ${[...Array(100).keys()].map(i => `<option value="${i+1}">${i+1}</option>`).join('')}
+                        </select>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Update Quantity
+        function updateQuantity(productId, qty) {
+            qty = parseInt(qty);
+            if (qty === 0) {
+                quantities.delete(productId);
+            } else {
+                quantities.set(productId, qty);
+            }
+            updateSummary();
+        }
+
+        // Update Summary
+        function updateSummary() {
+            const summaryItems = document.getElementById('summaryItems');
+            let totalCost = 0;
+            let items = [];
+
+            quantities.forEach((qty, productId) => {
+                const product = products.find(p => p.id === productId);
+                if (product) {
+                    const cost = product.price * qty;
+                    totalCost += cost;
+                    items.push(`
+                        <div class="summary-item">
+                            <span class="summary-item-name">${product.name} × ${qty}</span>
+                            <span class="summary-item-cost">৳${cost}</span>
+                        </div>
+                    `);
+                }
+            });
+
+            if (items.length === 0) {
+                summaryItems.innerHTML = '<div class="empty-cart">No products selected yet</div>';
+            } else {
+                summaryItems.innerHTML = items.join('');
+            }
+
+            document.getElementById('totalCost').textContent = totalCost;
+        }
+
+        // Setup Form Listener
+        function setupFormListener() {
+            document.getElementById('orderForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                const name = document.getElementById('name').value.trim();
+                const varsity = document.getElementById('varsity').value.trim();
+                const hall = document.getElementById('hall').value.trim();
+                const id = document.getElementById('id').value.trim();
+                const phone = document.getElementById('phone').value.trim();
+                
+                const followedPageEl = document.querySelector('input[name="followedPage"]:checked');
+                const followedPage = followedPageEl ? followedPageEl.value : '';
+
+                // Validation
+                if (!name || !varsity || !hall || !id || !phone || !followedPage) {
+                    showMessage('Please fill in all details, including the Facebook question.', 'error');
+                    return;
+                }
+
+                if (quantities.size === 0) {
+                    showMessage('Please select at least one product', 'error');
+                    return;
+                }
+
+                // Build order data
+                const orderData = {
+                    timestamp: new Date().toLocaleString(),
+                    name: name,
+                    varsity: varsity,
+                    hall: hall,
+                    id: id,
+                    phone: phone,
+                    products: buildProductsList(),
+                    totalCost: calculateTotal()
+                };
+
+                // Send to Google Sheets
+                await submitToGoogleSheets(orderData);
+            });
+        }
+
+        // Build Products List
+        function buildProductsList() {
+            let products_list = [];
+            quantities.forEach((qty, productId) => {
+                const product = products.find(p => p.id === productId);
+                if (product) {
+                    products_list.push(`${product.name} (${qty})`);
+                }
+            });
+            return products_list.join(", ");
+        }
+
+        // Calculate Total
+        function calculateTotal() {
+            let total = 0;
+            quantities.forEach((qty, productId) => {
+                const product = products.find(p => p.id === productId);
+                if (product) {
+                    total += product.price * qty;
+                }
+            });
+            return total;
+        }
+
+        // Submit to Google Sheets
+        async function submitToGoogleSheets(data) {
+            const btn = document.querySelector('.btn-submit');
+            btn.disabled = true;
+            btn.textContent = 'Submitting...';
+
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbzwZqdvesHhzpTjVo0IgbRHkrhzLnQibFYAAfPdlkDYrOfrsEm7NUQOBv4HKfJrFk74/exec';
+
+            try {
+                console.log('Submitting order data:', data);
+
+                // Convert payload data into standard URL parameters to comply with standard Apps Script Web App expectations
+                const params = new URLSearchParams(data);
+
+                await fetch(scriptURL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: params.toString()
+                });
+
+                console.log('Request sent. Check your Google Sheet to confirm the row was added.');
+                showMessage('✅ Order placed successfully! Check your confirmation.', 'success');
+                
+                // Clear state manually after a successful order execution
+                document.getElementById('orderForm').reset();
+                quantities.clear();
+                updateSummary();
+                
+                // Reset visual drop-down selectors
+                const allSelects = document.querySelectorAll('.product-controls select');
+                allSelects.forEach(select => select.selectedIndex = 0);
+
+                setTimeout(() => {
+                    location.reload();
+                }, 3500);
+            } catch (error) {
+                console.error('Order submission failed:', error);
+                showMessage('❌ Something went wrong. Please try again or contact support.', 'error');
+            }
+
+            btn.disabled = false;
+            btn.textContent = 'Place Order';
+        }
+
+        // Show Message
+        function showMessage(msg, type) {
+            const messagesDiv = document.getElementById('messages');
+            messagesDiv.innerHTML = `<div class="alert alert-${type}">${msg}</div>`;
+            setTimeout(() => {
+                messagesDiv.innerHTML = '';
+            }, 4000);
+        }
+
+        // Setup Reset Listener
+        function setupResetListener() {
+            document.querySelector('.btn-reset').addEventListener('click', () => {
+                quantities.clear();
+                updateSummary();
+                
+                // Explicitly clear visual indicators on target select items
+                const allSelects = document.querySelectorAll('.product-controls select');
+                allSelects.forEach(select => select.selectedIndex = 0);
+            });
+        }
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
